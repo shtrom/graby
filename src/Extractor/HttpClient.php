@@ -38,16 +38,25 @@ class HttpClient
      */
     private $logger;
     /**
+     * @var ContentExtractor
+     */
+    private $extractor;
+    /**
      * @var History
      */
     private $responseHistory;
 
     /**
-     * @param Client $client Http client
-     * @param array  $config
+     * @param Client               $client Http client
+     * @param array                $config
+     * @param LoggerInterface|null $logger
+     * @param ContentExtractor|null $extractor
      */
-    public function __construct(Client $client, $config = [], LoggerInterface $logger = null)
-    {
+    public function __construct(Client $client,
+        $config = [],
+        LoggerInterface $logger = null,
+        ContentExtractor $extractor = null
+    ) {
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
             'ua_browser' => 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.92 Safari/535.2',
@@ -90,6 +99,8 @@ class HttpClient
             $logger = new NullLogger();
         }
         $this->logger = $logger;
+
+        $this->extractor = $extractor;
 
         $this->responseHistory = new History();
         $this->client = new HttpMethodsClient(
@@ -240,6 +251,10 @@ class HttpClient
             foreach ($matchesConditional as $conditionalComment) {
                 $body = str_replace($conditionalComment, '', $body);
             }
+        }
+
+        if (null !== $this->extractor) {
+            $body = $this->extractor->processStringReplacements($body, $effectiveUrl);
         }
 
         // check for <meta name='fragment' content='!'/>
