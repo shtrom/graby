@@ -737,10 +737,8 @@ class ContentExtractor
      * @param string     $html
      * @param string     $url
      * @param SiteConfig $siteConfig Will avoid to recalculate the site config
-     *
-     * @return string $html with replacements performed
      */
-    private function prepareSiteConfig($html, $url, ?SiteConfig $siteConfig = null)
+    private function prepareSiteConfig($html, $url, ?SiteConfig $siteConfig = null) : void
     {
         if (null !== $this->siteConfig && null === $siteConfig) {
             return;
