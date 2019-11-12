@@ -625,8 +625,6 @@ class ContentExtractor
     /**
      * Process string replacements in the $html body.
      *
-     * @param string     $html
-     * @param string     $url
      * @param SiteConfig $siteConfig Will avoid to recalculate the site config
      *
      * @return string $html with replacements performed
@@ -648,34 +646,6 @@ class ContentExtractor
         $this->logger->debug('HTML after site config strings replacements', ['html' => $html]);
 
         return $html;
-    }
-
-    /**
-     * Set and prepare the SiteConfig, or get a default.
-     * If a siteConfig is already set and no prepare site config is passed, this is a noop.
-     *
-     * @param string     $html
-     * @param string     $url
-     * @param SiteConfig $siteConfig Will avoid to recalculate the site config
-     *
-     * @return string $html with replacements performed
-     */
-    private function prepareSiteConfig($html, $url, ?SiteConfig $siteConfig = null)
-    {
-        if (null !== $this->siteConfig && null === $siteConfig) {
-            return;
-        }
-        $this->siteConfig = $siteConfig;
-        if (null === $this->siteConfig) {
-            $this->siteConfig = $this->buildSiteConfig($url, $html);
-        }
-
-        // add lazyload information from siteconfig
-        if ($this->siteConfig->src_lazy_load_attr && !\in_array($this->siteConfig->src_lazy_load_attr, $this->config['src_lazy_load_attributes'], true)) {
-            $this->config['src_lazy_load_attributes'][] = $this->siteConfig->src_lazy_load_attr;
-        }
-
-        $this->logger->debug('Actual site config', ['siteConfig' => $this->siteConfig]);
     }
 
     public function getContent()
@@ -758,6 +728,34 @@ class ContentExtractor
         if (!\in_array($author, $this->authors, true)) {
             $this->authors[] = $author;
         }
+    }
+
+    /**
+     * Set and prepare the SiteConfig, or get a default.
+     * If a siteConfig is already set and no prepare site config is passed, this is a noop.
+     *
+     * @param string     $html
+     * @param string     $url
+     * @param SiteConfig $siteConfig Will avoid to recalculate the site config
+     *
+     * @return string $html with replacements performed
+     */
+    private function prepareSiteConfig($html, $url, ?SiteConfig $siteConfig = null)
+    {
+        if (null !== $this->siteConfig && null === $siteConfig) {
+            return;
+        }
+        $this->siteConfig = $siteConfig;
+        if (null === $this->siteConfig) {
+            $this->siteConfig = $this->buildSiteConfig($url, $html);
+        }
+
+        // add lazyload information from siteconfig
+        if ($this->siteConfig->src_lazy_load_attr && !\in_array($this->siteConfig->src_lazy_load_attr, $this->config['src_lazy_load_attributes'], true)) {
+            $this->config['src_lazy_load_attributes'][] = $this->siteConfig->src_lazy_load_attr;
+        }
+
+        $this->logger->debug('Actual site config', ['siteConfig' => $this->siteConfig]);
     }
 
     /**

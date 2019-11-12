@@ -47,10 +47,8 @@ class HttpClient
     private $responseHistory;
 
     /**
-     * @param Client               $client Http client
-     * @param array                $config
-     * @param LoggerInterface|null $logger
-     * @param ContentExtractor|null $extractor
+     * @param Client $client Http client
+     * @param array  $config
      */
     public function __construct(Client $client,
         $config = [],

@@ -94,16 +94,16 @@ class GrabyTest extends TestCase
      * @dataProvider dataForFetchContent
      */
     public function testFetchContent($url,
-		$urlEffective,
-		$header,
-		$language,
-		$author,
-		$title,
-		$summary,
-		$rawContent,
-		$rawContent2,
-		$parsedContent
-	) {
+        $urlEffective,
+        $header,
+        $language,
+        $author,
+        $title,
+        $summary,
+        $rawContent,
+        $rawContent2,
+        $parsedContent
+    ) {
         $httpMockClient = new HttpMockClient();
         $httpMockClient->addResponse(new Response(
             200,
@@ -113,7 +113,7 @@ class GrabyTest extends TestCase
         $httpMockClient->addResponse(new Response(
             200,
             ['Content-Type' => $header],
-            (!empty($rawContent2))?$rawContent2:$rawContent)
+            (!empty($rawContent2)) ? $rawContent2 : $rawContent)
         );
 
         $graby = new Graby([
